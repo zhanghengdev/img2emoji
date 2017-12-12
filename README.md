@@ -8,9 +8,9 @@
 Ce projet vise à **détecter les objets dans une image** et **faire la mise en correspondance avec les emojis**.
 
 Par exemple, l'entrée de système:
-![](https://lh6.googleusercontent.com/T3ICsrm-oFJk5zr6Zp97BF35k4C8kO4DGPgkPc5v21jdi9KmQVxMiK-zirYRPAIcH3fDQoSFiA39zvqAZBeo=w1855-h959) 
+![](/home/beamtek/img2emoji/img/dog.png) 
 Et ce qu’il va donner ça en sortie:
-![](https://lh6.googleusercontent.com/6G3ue1BcDuhOlZQ16gVjWQtnJufrnjrKdM71vQ_NDDHmtqxVlaj0Irf3wIftMnctzYf1hxDVtbZgxHwcQNp2=w1855-h959) 
+![](/home/beamtek/img2emoji/img/emoji.png) 
 
 ## Etapes principles
 
@@ -20,7 +20,7 @@ Et ce qu’il va donner ça en sortie:
 1. Afficher les emojis sur l’interface graphique.
 
 ## Prototype d’interface
-![](https://lh3.googleusercontent.com/Dj1UYF8uNONZlulAF5Ie4aygdyAgpl5TXdpu67SVCl7PrOG-VdLF5t3gCZAVEodlZt4gESPu-zVxWRdVc3m6=w1855-h959) 
+![](/home/beamtek/img2emoji/img/interface.png) 
 
 ## Enjeux du projet
 1. Permets de **détecter plusieurs classes d’objets**(personne, chat, chien, etc).

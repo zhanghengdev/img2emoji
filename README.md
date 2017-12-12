@@ -8,9 +8,13 @@
 Ce projet vise à **détecter les objets dans une image** et **faire la mise en correspondance avec les emojis**.
 
 Par exemple, l'entrée de système:
+
 ![](img/dog.png) 
+
 Et ce qu’il va donner ça en sortie:
+
 ![](img/emoji.png) 
+
 
 ## Etapes principles
 

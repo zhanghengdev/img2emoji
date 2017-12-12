@@ -1,4 +1,4 @@
-#img2emoji
+# img2emoji
 
 #### Membre: Yutong YAN, Sixiang XU, Heng ZHANG
 

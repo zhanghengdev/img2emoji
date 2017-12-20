@@ -165,8 +165,8 @@ if __name__ == "__main__":
         print 'usage: python yolo_detection.py filename'
     elif len(sys.argv) == 2:
         filename = sys.argv[1]
-        print filename + " : " + detect_img(filename)
+        print filename + " : " + str(detect_img(filename))
     else:
         net, meta = load_detector()
         for filename in sys.argv[1:]:
-            print filename + " : " + detec_img_with_preloaded_detector(filename, net, meta)
+            print filename + " : " + str(detec_img_with_preloaded_detector(filename, net, meta))

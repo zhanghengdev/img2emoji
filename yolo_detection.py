@@ -2,6 +2,7 @@ from ctypes import *
 import math
 import random
 import time
+import sys
 
 def sample(probs):
     s = sum(probs)
@@ -159,7 +160,13 @@ def detect_imgs(filenames, cfg="cfg/yolo.cfg", weights="yolo.weights", data="cfg
 
 if __name__ == "__main__":
     #print detect_img("data/dog.jpg")
-    net, meta = load_detector()
-    print detec_img_with_preloaded_detector("data/dog.jpg", net, meta)
-    print detec_img_with_preloaded_detector("data/dog.jpg", net, meta)
-    print detec_img_with_preloaded_detector("data/dog.jpg", net, meta)
+
+    if len(sys.argv) == 1:
+        print 'usage: python yolo_detection.py filename'
+    elif len(sys.argv) == 2:
+        filename = sys.argv[1]
+        print filename + " : " + detect_img(filename)
+    else:
+        net, meta = load_detector()
+        for filename in sys.argv[1:]:
+            print filename + " : " + detec_img_with_preloaded_detector(filename, net, meta)

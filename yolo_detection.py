@@ -161,5 +161,5 @@ if __name__ == "__main__":
     #print detect_img("data/dog.jpg")
     net, meta = load_detector()
     print detec_img_with_preloaded_detector("data/dog.jpg", net, meta)
-    print detec_img_with_preloaded_detector("data/eagle.jpg", net, meta)
-    print detec_img_with_preloaded_detector("data/person.jpg", net, meta)
+    print detec_img_with_preloaded_detector("data/dog.jpg", net, meta)
+    print detec_img_with_preloaded_detector("data/dog.jpg", net, meta)

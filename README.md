@@ -9,11 +9,11 @@ Ce projet vise à **détecter les objets dans une image** et **faire la mise en 
 
 Par exemple, l'entrée de système:
 
-![](img/dog.png) 
+![](doc/img/dog.png) 
 
 Et ce qu’il va donner ça en sortie:
 
-![](img/emoji.png) 
+![](doc/img/emoji.png) 
 
 
 ## Etapes principles
@@ -24,7 +24,7 @@ Et ce qu’il va donner ça en sortie:
 1. Afficher les emojis sur l’interface graphique.
 
 ## Prototype d’interface
-![](img/interface.png) 
+![](doc/img/interface.png) 
 
 ## Enjeux du projet
 1. Permets de **détecter plusieurs classes d’objets**(personne, chat, chien, etc).

@@ -4,7 +4,7 @@
 
 ## Introduction
 
-This project aims to ** detect objects in an image ** and ** match detected objects with emojis **.
+This project aims to **detect objects in an image** and **match detected objects with emojis**.
 
 ## Interface
 
@@ -40,7 +40,7 @@ python yolo_detection.py filename1 filename2 filename3 ...
 
 ## For more information(in french)
 
-- [Cahier de charge](https://github.com/ZHANGHeng19931123/img2emoji/blob/master/doc/https://github.com/ZHANGHeng19931123/img2emoji/blob/master/img/Cahier_de_charge.md) 
+- [Cahier de charge](https://github.com/ZHANGHeng19931123/img2emoji/blob/master/doc/Cahier_de_charge.md) 
 
 ## Reference
 

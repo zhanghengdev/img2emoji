@@ -1,0 +1,17 @@
+# Windows:
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python:
+*.pyc
+*.so
+*.egg
+*.egg-info
+*.a
+dist
+build
+
+# weights
+.*weights
+obj

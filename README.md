@@ -37,7 +37,10 @@ python yolo_detection.py data/dog.jpg
 ```bash
 python yolo_detection.py filename1 filename2 filename3 ...
 ```
-
+- If you want to run the interface program, run:
+```bash
+python __init__.py
+```
 ## For more information(in french)
 
 - [Cahier de charge](https://github.com/ZHANGHeng19931123/img2emoji/blob/master/doc/Cahier_de_charge.md) 

@@ -128,7 +128,7 @@ def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
     free_ptrs(cast(probs, POINTER(c_void_p)), num)
     return res
 
-def load_detector(cfg="cfg/tiny-yolo.cfg", weights="tiny-yolo.weights", data="cfg/coco.data", thresh=.5, hier_thresh=.5, nms=.45):
+def load_detector(cfg="cfg/yolo.cfg", weights="yolo.weights", data="cfg/coco.data", thresh=.5, hier_thresh=.5, nms=.45):
     net = load_net(cfg, weights, 0)
     meta = load_meta(data)
     return net, meta

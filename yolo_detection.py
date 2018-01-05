@@ -139,14 +139,14 @@ def detect_img(filename, cfg="cfg/yolo.cfg", weights="yolo.weights", data="cfg/c
     start=time.time()
     result = detect(net, meta, filename, thresh=thresh, hier_thresh=hier_thresh, nms=nms)
     end=time.time()
-    print 'detection time:{:.4f}'.format(end-start)
+    print('detection time:{:.4f}'.format(end-start))
     return result
 
 def detec_img_with_preloaded_detector(filename, net, meta, thresh=.5, hier_thresh=.5, nms=.45):
     start=time.time()
     result = detect(net, meta, filename, thresh=thresh, hier_thresh=hier_thresh, nms=nms)
     end=time.time()
-    print 'detection time:{:.4f}'.format(end-start)
+    print('detection time:{:.4f}\r'.format(end-start))
     return result
 
 def detect_imgs(filenames, cfg="cfg/yolo.cfg", weights="yolo.weights", data="cfg/coco.data", thresh=.5, hier_thresh=.5, nms=.45):
@@ -162,11 +162,11 @@ if __name__ == "__main__":
     #print detect_img("data/dog.jpg")
 
     if len(sys.argv) == 1:
-        print 'usage: python yolo_detection.py filename'
+        print('usage: python yolo_detection.py filename')
     elif len(sys.argv) == 2:
         filename = sys.argv[1]
-        print filename + " : " + str(detect_img(filename))
+        print(filename + " : " + str(detect_img(filename)))
     else:
         net, meta = load_detector()
         for filename in sys.argv[1:]:
-            print filename + " : " + str(detec_img_with_preloaded_detector(filename, net, meta))
+            print(filename + " : " + str(detec_img_with_preloaded_detector(filename, net, meta)))

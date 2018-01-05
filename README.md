@@ -39,7 +39,7 @@ python yolo_detection.py filename1 filename2 filename3 ...
 ```
 - If you want to run the interface program, run:
 ```bash
-python __init__.py
+python img2emoji.py
 ```
 ## For more information(in french)
 

@@ -37,7 +37,7 @@ class img2emoji():
             self.timer.stop()
         self.mode = 'image'
         fileName1, filetype = QtWidgets.QFileDialog.getOpenFileName(self.Form,  "choose a file",  "",  "Image Files (*.png *.bmp *.jpg *.tif *.GIF)")
-        self.ui.label_4.setPixmap(QtGui.QPixmap(fileName1).scaled(320, 240))
+        self.ui.label_4.setPixmap(QtGui.QPixmap(fileName1).scaled(640, 480))
 
     def captureImage(self):
         if self.mode == 'image':
@@ -50,7 +50,7 @@ class img2emoji():
 
     def updateFrame(self):
         ret, srcMat=self.videoCapture.read()
-        srcMat=cv2.resize(srcMat, (320, 240), interpolation=cv2.INTER_CUBIC)
+        srcMat=cv2.resize(srcMat, (640, 480), interpolation=cv2.INTER_CUBIC)
         srcMat=cv2.flip(srcMat, 1)
         cv2.cvtColor(srcMat, cv2.COLOR_BGR2RGB,srcMat)
         height, width, bytesPerComponent= srcMat.shape
@@ -67,17 +67,15 @@ class img2emoji():
             scene = QtWidgets.QGraphicsScene()
             for i, result in enumerate(results):
                 filename='emojis/{}'.format(result)
-                item=QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap(filename).scaled(64,64))
+                item=QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap(filename).scaled(128,128))
                 scene.addItem(item)
                 lig = i/3
                 col = i%3
-                item.setPos(col*64,lig*64)
+                item.setPos(col*128,lig*128)
             self.ui.graphicsView.setScene(scene)
             os.system('rm temp.jpg')
         except:
             print("detection failed")
-
-
 
 if __name__ == "__main__":
     import sys

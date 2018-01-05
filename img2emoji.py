@@ -14,20 +14,7 @@ class img2emoji():
         self.ui.pushButton.clicked.connect(self.openImage)
         self.ui.pushButton_2.clicked.connect(self.captureImage)
         self.ui.pushButton_3.clicked.connect(self.detection)
-
-        self.ui.pushButton.setIconSize(QtCore.QSize(40,40))
-        self.ui.pushButton.setIcon(QtGui.QIcon("icon/folder.png"))
-        self.ui.pushButton.setFlat(True)
-        self.ui.pushButton.setText("")
-
-        self.ui.pushButton_2.setIconSize(QtCore.QSize(40,40))
-        self.ui.pushButton_2.setIcon(QtGui.QIcon("icon/Camera.png"))
-        self.ui.pushButton_2.setFlat(True)
-        self.ui.pushButton_2.setText("")
-
-        self.ui.pushButton_3.setText("detecter")
         self.net, self.meta=yolo_detection.load_detector()
-
         self.mode = 'image'
 
 

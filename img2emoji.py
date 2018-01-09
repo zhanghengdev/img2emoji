@@ -49,13 +49,14 @@ class img2emoji():
         self.net, self.meta=yolo_detection.load_detector(cfg="cfg/tiny-yolo.cfg", weights="tiny-yolo.weights")
 
     def openImage(self):
-        self.home_timer.stop()
-        if self.mode == 'camera':
-            self.videoCapture.release()
-            self.timer.stop()
-        self.mode = 'image'
         fileName, filetype = QtWidgets.QFileDialog.getOpenFileName(self.Form,  "choose a file",  "",  "Image Files (*.png *.bmp *.jpg *.tif *.GIF)")
-        self.ui.update_left_label_with_file(fileName)
+        if fileName != '':
+            self.home_timer.stop()
+            if self.mode == 'camera':
+                self.videoCapture.release()
+                self.timer.stop()
+            self.mode = 'image'
+            self.ui.update_left_label_with_file(fileName)
 
     def captureImage(self):
         self.home_timer.stop()

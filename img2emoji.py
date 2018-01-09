@@ -11,6 +11,12 @@ class img2emoji():
         self.ui.setupUi(self.Form)
         self.videoCapture=cv2.VideoCapture()
         self.timer=QtCore.QTimer()
+        self.timer.timeout.connect(self.updateFrame)
+
+        self.home_timer=QtCore.QTimer()
+        self.home_timer.timeout.connect(self.ui.update_right_home_scene)
+        self.home_timer.start(1000/5)
+
         self.ui.file_button.clicked.connect(self.openImage)
         self.ui.camera_button.clicked.connect(self.captureImage)
         self.ui.convert_button.clicked.connect(self.detection)
@@ -31,8 +37,9 @@ class img2emoji():
     def load_tiny_yolo(self):
         yolo_detection.free_net(self.net)
         self.net, self.meta=yolo_detection.load_detector(cfg="cfg/tiny-yolo.cfg", weights="tiny-yolo.weights")
-        
+
     def openImage(self):
+        self.home_timer.stop()
         if self.mode == 'camera':
             self.videoCapture.release()
             self.timer.stop()
@@ -41,10 +48,10 @@ class img2emoji():
         self.ui.update_left_label_with_file(fileName)
 
     def captureImage(self):
+        self.home_timer.stop()
         if self.mode == 'image':
             self.mode = 'camera'
             if self.videoCapture.open(0):
-                self.timer.timeout.connect(self.updateFrame)
                 self.timer.start(1000/25)
             else:
                 print("camera configuration failed")
@@ -61,16 +68,8 @@ class img2emoji():
         try:
             img_detc.save("temp.jpg")
             results = yolo_detection.detec_img_with_preloaded_detector("temp.jpg", self.net, self.meta)
-            scene = QtWidgets.QGraphicsScene()
+            self.ui.update_right_result_scene(results)
             print(results)
-            for i, result in enumerate(results):
-                filename='emojis/{}'.format(result)
-                item=QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap(filename).scaled(128,128))
-                scene.addItem(item)
-                lig = i/3
-                col = i%3
-                item.setPos(col*128,lig*128)
-            self.ui.graphicsView.setScene(scene)
             os.system('rm temp.jpg')
         except:
             print("detection failed")

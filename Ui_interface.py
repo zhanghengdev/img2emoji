@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore, QtGui, QtWidgets
+from random import *
+import os
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -109,6 +111,8 @@ class Ui_Form(object):
         self.horizontalLayout_4.addItem(QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
         self.verticalLayout.addLayout(self.horizontalLayout_4)
 
+        self.scene = QtWidgets.QGraphicsScene()
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -117,6 +121,9 @@ class Ui_Form(object):
         self.chinese_button.clicked.connect(self.setChinese)
         self.settings_button.clicked.connect(self.settings)
         self.about_us_button.clicked.connect(self.show_about_us)
+
+        self.scene = QtWidgets.QGraphicsScene()
+
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -127,7 +134,7 @@ class Ui_Form(object):
         self.french_button.setText(_translate("Form", "Français"))
         self.english_button.setText(_translate("Form", "English"))
         self.setFrench()
-        self.showHomeImage()
+        self.show_home_image()
 
     def update_left_label_with_file(self, fileName):
         self.left_label.setPixmap(QtGui.QPixmap(fileName).scaled(640, 480))
@@ -139,8 +146,29 @@ class Ui_Form(object):
         srcQPix=QtGui.QPixmap.fromImage(srcQImage)
         self.left_label.setPixmap(srcQPix)
 
-    def showHomeImage(self):
-            self.left_label.setPixmap(QtGui.QPixmap("icon/home.jpg").scaled(640, 480))
+    def show_home_image(self):
+        self.left_label.setPixmap(QtGui.QPixmap("icon/home.jpg").scaled(640, 480))
+
+    def update_right_home_scene(self):
+        random_file = os.listdir('emojis/')[randint(1, 87)]
+        lig = randint(1, 3)
+        col = randint(1, 3)
+        for file_name in [os.path.join('emojis', 'null.png'), os.path.join('emojis', random_file)]:
+            item=QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap(file_name).scaled(128,128))
+            self.scene.addItem(item)
+            item.setPos(col*128,lig*128)
+        self.graphicsView.setScene(self.scene)
+
+    def update_right_result_scene(self, results):
+        scene = QtWidgets.QGraphicsScene()
+        for i, result in enumerate(results):
+            filename=os.path.join('emojis', result+'.png')
+            item=QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap(filename).scaled(128,128))
+            scene.addItem(item)
+            lig = i/3
+            col = i%3
+            item.setPos(col*128,lig*128)
+        self.graphicsView.setScene(scene)
 
     def settings(self):
         if self.yolo_button.isVisible():

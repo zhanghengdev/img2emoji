@@ -46,6 +46,11 @@ class Ui_Form(object):
         self.tiny_yolo_button.hide()
         self.tiny_yolo_button.setObjectName("tiny_yolo_button")
         self.horizontalLayout.addWidget(self.tiny_yolo_button)
+        self.about_us_button = QtWidgets.QPushButton(Form)
+        self.about_us_button.setIcon(QtGui.QIcon("icon/info.png"))
+        self.about_us_button.setIconSize(QtCore.QSize(40, 40))
+        self.about_us_button.setObjectName("about_us_button")
+        self.horizontalLayout.addWidget(self.about_us_button)
         self.horizontalLayout.addItem(QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
         self.french_button = QtWidgets.QPushButton(Form)
         self.french_button.setIcon(QtGui.QIcon("icon/france.ico"))
@@ -111,6 +116,7 @@ class Ui_Form(object):
         self.english_button.clicked.connect(self.setEnglish)
         self.chinese_button.clicked.connect(self.setChinese)
         self.settings_button.clicked.connect(self.settings)
+        self.about_us_button.clicked.connect(self.show_about_us)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -144,21 +150,32 @@ class Ui_Form(object):
             self.yolo_button.show()
             self.tiny_yolo_button.show()
 
+    def show_about_us(self):
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setWindowTitle('Imamapi')
+        msgBox.setIconPixmap(QtGui.QPixmap("icon/img.jpg").scaled(200, 200))
+        msgBox.setText('Team Imamaipi\n-Yutong YAN\n-Heng ZHANG\n-Sixiang XU\n-Yunyun SUN')
+        ret = msgBox.exec_()
+
+
     def setFrench(self):
         self.file_button.setText("Ouvrir un fichier")
         self.convert_button.setText("Convertir!")
         self.camera_button.setText("Ouvrir la caméra")
         self.settings_button.setText("Paramètres")
+        self.about_us_button.setText("À propos de nous")
     def setEnglish(self):
         self.file_button.setText("open file")
         self.convert_button.setText("Convert!")
         self.camera_button.setText("Open camera")
         self.settings_button.setText("Settings")
+        self.about_us_button.setText("About us")
     def setChinese(self):
         self.file_button.setText("打开文件")
         self.convert_button.setText("转换！")
         self.camera_button.setText("打开摄像头")
         self.settings_button.setText("设置")
+        self.about_us_button.setText("关于我们")
 
 
 if __name__ == "__main__":

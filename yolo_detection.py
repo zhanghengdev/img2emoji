@@ -80,6 +80,9 @@ load_net = lib.load_network
 load_net.argtypes = [c_char_p, c_char_p, c_int]
 load_net.restype = c_void_p
 
+free_net = lib.free_network
+free_net.argtypes = [c_void_p]
+
 free_image = lib.free_image
 free_image.argtypes = [IMAGE]
 

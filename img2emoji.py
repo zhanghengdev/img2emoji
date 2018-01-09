@@ -52,6 +52,7 @@ class img2emoji():
             img_detc.save("temp.jpg")
             results = yolo_detection.detec_img_with_preloaded_detector("temp.jpg", self.net, self.meta)
             scene = QtWidgets.QGraphicsScene()
+            print(results)
             for i, result in enumerate(results):
                 filename='emojis/{}'.format(result)
                 item=QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap(filename).scaled(128,128))

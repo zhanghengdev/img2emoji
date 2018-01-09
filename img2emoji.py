@@ -30,6 +30,10 @@ class img2emoji():
         self.start_home_screen()
 
     def start_home_screen(self):
+        if self.mode == 'camera':
+            self.videoCapture.release()
+            self.timer.stop()
+        self.mode = 'image'
         self.ui.show_home_image()
         self.home_timer=QtCore.QTimer()
         self.home_timer.timeout.connect(self.ui.update_right_home_scene)

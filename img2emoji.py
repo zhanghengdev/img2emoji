@@ -13,6 +13,7 @@ class img2emoji():
         self.timer=QtCore.QTimer()
         self.timer.timeout.connect(self.updateFrame)
 
+        self.ui.show_home_image()
         self.home_timer=QtCore.QTimer()
         self.home_timer.timeout.connect(self.ui.update_right_home_scene)
         self.home_timer.start(1000/5)
@@ -22,8 +23,17 @@ class img2emoji():
         self.ui.convert_button.clicked.connect(self.detection)
         self.ui.yolo_button.clicked.connect(self.load_yolo)
         self.ui.tiny_yolo_button.clicked.connect(self.load_tiny_yolo)
+        self.ui.home_button.clicked.connect(self.start_home_screen)
         self.net, self.meta=yolo_detection.load_detector()
         self.mode = 'image'
+
+        self.start_home_screen()
+
+    def start_home_screen(self):
+        self.ui.show_home_image()
+        self.home_timer=QtCore.QTimer()
+        self.home_timer.timeout.connect(self.ui.update_right_home_scene)
+        self.home_timer.start(1000/5)
 
     def free_network(self):
         try:

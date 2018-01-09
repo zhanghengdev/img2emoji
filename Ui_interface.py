@@ -19,6 +19,11 @@ class Ui_Form(object):
 
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
+        self.home_button = QtWidgets.QPushButton(Form)
+        self.home_button.setIcon(QtGui.QIcon("icon/home.png"))
+        self.home_button.setIconSize(QtCore.QSize(40, 40))
+        self.home_button.setObjectName("home_button")
+        self.horizontalLayout.addWidget(self.home_button)
         self.file_button = QtWidgets.QPushButton(Form)
         self.file_button.setIcon(QtGui.QIcon("icon/folder.png"))
         self.file_button.setIconSize(QtCore.QSize(40, 40))
@@ -134,7 +139,6 @@ class Ui_Form(object):
         self.french_button.setText(_translate("Form", "Français"))
         self.english_button.setText(_translate("Form", "English"))
         self.setFrench()
-        self.show_home_image()
 
     def update_left_label_with_file(self, fileName):
         self.left_label.setPixmap(QtGui.QPixmap(fileName).scaled(640, 480))

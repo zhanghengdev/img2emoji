@@ -13,7 +13,6 @@ class img2emoji():
         self.timer=QtCore.QTimer()
         self.timer.timeout.connect(self.updateFrame)
 
-        self.ui.show_home_image()
         self.home_timer=QtCore.QTimer()
         self.home_timer.timeout.connect(self.ui.update_right_home_scene)
         self.home_timer.start(1000/5)

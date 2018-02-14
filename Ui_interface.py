@@ -180,7 +180,7 @@ class Ui_Form(object):
 
 
     def setFrench(self):
-        self.home_button.setText("Maison")
+        self.home_button.setText("Accueil")
         self.file_button.setText("Ouvrir un fichier")
         self.convert_button.setText("Convertir!")
         self.camera_button.setText("Ouvrir la caméra")

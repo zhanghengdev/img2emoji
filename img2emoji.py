@@ -60,6 +60,7 @@ class img2emoji():
                 self.timer.stop()
             self.mode = 'image'
             self.ui.update_left_label_with_file(fileName)
+            self.ui.update_right_result_scene([])
 
     def captureImage(self):
         self.home_timer.stop()
@@ -67,6 +68,7 @@ class img2emoji():
             self.mode = 'camera'
             if self.videoCapture.open(0):
                 self.timer.start(1000/25)
+                self.ui.update_right_result_scene([])
             else:
                 print("camera configuration failed")
 
@@ -78,15 +80,13 @@ class img2emoji():
         self.ui.update_left_label_with_video(srcMat)
 
     def detection(self):
-        img_detc=self.ui.left_label.pixmap()
-        try:
+        if not self.home_timer.isActive():
+            img_detc=self.ui.left_label.pixmap()
             img_detc.save("temp.jpg")
             results = yolo_detection.detec_img_with_preloaded_detector("temp.jpg", self.net, self.meta)
             self.ui.update_right_result_scene(results)
             print(results)
             os.system('rm temp.jpg')
-        except:
-            print("detection failed")
 
 if __name__ == "__main__":
     import sys

@@ -17,6 +17,7 @@
 #include "activation_layer.h"
 #include "detection_layer.h"
 #include "region_layer.h"
+#include "yolo_layer.h"
 #include "normalization_layer.h"
 #include "batchnorm_layer.h"
 #include "maxpool_layer.h"
@@ -26,6 +27,7 @@
 #include "softmax_layer.h"
 #include "dropout_layer.h"
 #include "route_layer.h"
+#include "upsample_layer.h"
 #include "shortcut_layer.h"
 #include "parser.h"
 #include "data.h"
@@ -150,6 +152,8 @@ char *get_layer_string(LAYER_TYPE a)
             return "detection";
         case REGION:
             return "region";
+        case YOLO:
+            return "yolo";
         case DROPOUT:
             return "dropout";
         case CROP:
@@ -185,7 +189,7 @@ void forward_network(network *netp)
 {
 #ifdef GPU
     if(netp->gpu_index >= 0){
-        forward_network_gpu(netp);
+        forward_network_gpu(netp);   
         return;
     }
 #endif
@@ -210,7 +214,7 @@ void update_network(network *netp)
 {
 #ifdef GPU
     if(netp->gpu_index >= 0){
-        update_network_gpu(netp);
+        update_network_gpu(netp);   
         return;
     }
 #endif
@@ -260,7 +264,7 @@ void backward_network(network *netp)
 {
 #ifdef GPU
     if(netp->gpu_index >= 0){
-        backward_network_gpu(netp);
+        backward_network_gpu(netp);   
         return;
     }
 #endif
@@ -345,7 +349,7 @@ void set_batch_network(network *net, int b)
         if(net->layers[i].type == DECONVOLUTIONAL){
             layer *l = net->layers + i;
             cudnnSetTensor4dDescriptor(l->dstTensorDesc, CUDNN_TENSOR_NCHW, CUDNN_DATA_FLOAT, 1, l->out_c, l->out_h, l->out_w);
-            cudnnSetTensor4dDescriptor(l->normTensorDesc, CUDNN_TENSOR_NCHW, CUDNN_DATA_FLOAT, 1, l->out_c, 1, 1);
+            cudnnSetTensor4dDescriptor(l->normTensorDesc, CUDNN_TENSOR_NCHW, CUDNN_DATA_FLOAT, 1, l->out_c, 1, 1); 
         }
 #endif
     }
@@ -375,8 +379,14 @@ int resize_network(network *net, int w, int h)
             resize_maxpool_layer(&l, w, h);
         }else if(l.type == REGION){
             resize_region_layer(&l, w, h);
+        }else if(l.type == YOLO){
+            resize_yolo_layer(&l, w, h);
         }else if(l.type == ROUTE){
             resize_route_layer(&l, net);
+        }else if(l.type == SHORTCUT){
+            resize_shortcut_layer(&l, w, h);
+        }else if(l.type == UPSAMPLE){
+            resize_upsample_layer(&l, w, h);
         }else if(l.type == REORG){
             resize_reorg_layer(&l, w, h);
         }else if(l.type == AVGPOOL){
@@ -412,7 +422,9 @@ int resize_network(network *net, int w, int h)
         cuda_free(net->truth_gpu);
         net->input_gpu = cuda_make_array(net->input, net->inputs*net->batch);
         net->truth_gpu = cuda_make_array(net->truth, net->truths*net->batch);
-        net->workspace = cuda_make_array(0, (workspace_size-1)/sizeof(float)+1);
+        if(workspace_size){
+            net->workspace = cuda_make_array(0, (workspace_size-1)/sizeof(float)+1);
+        }
     }else {
         free(net->workspace);
         net->workspace = calloc(1, workspace_size);
@@ -473,7 +485,7 @@ void visualize_network(network *net)
         if(l.type == CONVOLUTIONAL){
             prev = visualize_convolutional_layer(l, buff, prev);
         }
-    }
+    } 
 }
 
 void top_predictions(network *net, int k, int *index)
@@ -495,36 +507,73 @@ float *network_predict(network *net, float *input)
     return out;
 }
 
-int num_boxes(network *net)
+int num_detections(network *net, float thresh)
 {
-    layer l = net->layers[net->n-1];
-    return l.w*l.h*l.n;
+    int i;
+    int s = 0;
+    for(i = 0; i < net->n; ++i){
+        layer l = net->layers[i];
+        if(l.type == YOLO){
+            s += yolo_num_detections(l, thresh);
+        }
+        if(l.type == DETECTION || l.type == REGION){
+            s += l.w*l.h*l.n;
+        }
+    }
+    return s;
 }
 
-box *make_boxes(network *net)
+detection *make_network_boxes(network *net, float thresh, int *num)
 {
-    layer l = net->layers[net->n-1];
-    box *boxes = calloc(l.w*l.h*l.n, sizeof(box));
-    return boxes;
+    layer l = net->layers[net->n - 1];
+    int i;
+    int nboxes = num_detections(net, thresh);
+    if(num) *num = nboxes;
+    detection *dets = calloc(nboxes, sizeof(detection));
+    for(i = 0; i < nboxes; ++i){
+        dets[i].prob = calloc(l.classes, sizeof(float));
+        if(l.coords > 4){
+            dets[i].mask = calloc(l.coords-4, sizeof(float));
+        }
+    }
+    return dets;
 }
 
-float **make_probs(network *net)
+void fill_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, detection *dets)
 {
     int j;
-    layer l = net->layers[net->n-1];
-    float **probs = calloc(l.w*l.h*l.n, sizeof(float *));
-    for(j = 0; j < l.w*l.h*l.n; ++j) probs[j] = calloc(l.classes + 1, sizeof(float *));
-    return probs;
+    for(j = 0; j < net->n; ++j){
+        layer l = net->layers[j];
+        if(l.type == YOLO){
+            int count = get_yolo_detections(l, w, h, net->w, net->h, thresh, map, relative, dets);
+            dets += count;
+        }
+        if(l.type == REGION){
+            get_region_detections(l, w, h, net->w, net->h, thresh, map, hier, relative, dets);
+            dets += l.w*l.h*l.n;
+        }
+        if(l.type == DETECTION){
+            get_detection_detections(l, w, h, thresh, dets);
+            dets += l.w*l.h*l.n;
+        }
+    }
 }
 
-void network_detect(network *net, image im, float thresh, float hier_thresh, float nms, box *boxes, float **probs)
+detection *get_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num)
 {
-    network_predict_image(net, im);
-    layer l = net->layers[net->n-1];
-    if(l.type == REGION){
-        get_region_boxes(l, im.w, im.h, net->w, net->h, thresh, probs, boxes, 0, 0, 0, hier_thresh, 0);
-        if (nms) do_nms_sort(boxes, probs, l.w*l.h*l.n, l.classes, nms);
+    detection *dets = make_network_boxes(net, thresh, num);
+    fill_network_boxes(net, w, h, thresh, hier, map, relative, dets);
+    return dets;
+}
+
+void free_detections(detection *dets, int n)
+{
+    int i;
+    for(i = 0; i < n; ++i){
+        free(dets[i].prob);
+        if(dets[i].mask) free(dets[i].mask);
     }
+    free(dets);
 }
 
 float *network_predict_image(network *net, image im)
@@ -561,7 +610,7 @@ matrix network_predict_data_multi(network *net, data test, int n)
         }
     }
     free(X);
-    return pred;
+    return pred;   
 }
 
 matrix network_predict_data(network *net, data test)
@@ -584,7 +633,7 @@ matrix network_predict_data(network *net, data test)
         }
     }
     free(X);
-    return pred;
+    return pred;   
 }
 
 void print_network(network *net)
@@ -626,7 +675,7 @@ void compare_networks(network *n1, network *n2, data test)
     printf("%5d %5d\n%5d %5d\n", a, b, c, d);
     float num = pow((abs(b - c) - 1.), 2.);
     float den = b + c;
-    printf("%f\n", num/den);
+    printf("%f\n", num/den); 
 }
 
 float network_accuracy(network *net, data d)

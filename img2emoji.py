@@ -23,7 +23,7 @@ class img2emoji():
         self.ui.yolo_button.clicked.connect(self.load_yolo)
         self.ui.tiny_yolo_button.clicked.connect(self.load_tiny_yolo)
         self.ui.home_button.clicked.connect(self.start_home_screen)
-        self.net, self.meta=yolo_detection.load_detector(cfg="cfg/tiny-yolo.cfg", weights="tiny-yolo.weights")
+        self.net, self.meta=yolo_detection.load_detector()
         self.mode = 'image'
 
         self.start_home_screen()
@@ -49,7 +49,7 @@ class img2emoji():
         self.net, self.meta=yolo_detection.load_detector()
     def load_tiny_yolo(self):
         yolo_detection.free_net(self.net)
-        self.net, self.meta=yolo_detection.load_detector(cfg="cfg/tiny-yolo.cfg", weights="tiny-yolo.weights")
+        self.net, self.meta=yolo_detection.load_detector()
 
     def openImage(self):
         fileName, filetype = QtWidgets.QFileDialog.getOpenFileName(self.Form,  "choose a file",  "",  "Image Files (*.png *.bmp *.jpg *.tif *.GIF)")

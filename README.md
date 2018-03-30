@@ -1,5 +1,9 @@
 # Install img2emoji
 
+## News
+
+- Updated to YOLOv3! For more details, see [this](https://pjreddie.com/darknet/yolo/).
+
 ## Introduction
 
 <p align="center">
@@ -49,10 +53,9 @@ CUDNN=1		# 0 if your pc doesn't support CUDNN
 OPENCV=1	# 0 if your pc doesn't support OPENCV
 ```
 - `make` the project;
-- Download `yolo.weights` and `tiny-yolo.weights` by running:
+- Download `yolo.weights` by running:
 ```bash
 wget https://pjreddie.com/media/files/yolo.weights
-wget https://pjreddie.com/media/files/tiny-yolo-voc.weights
 ```
 - If you want to detect one image, run:
 ```bash
@@ -72,7 +75,7 @@ python img2emoji.py
 ```
 ## Documents
 
-- [Cahier de charge](https://github.com/ZHANGHeng19931123/img2emoji/blob/master/doc/Cahier_de_charge.md) 
+- [Cahier de charge](https://github.com/ZHANGHeng19931123/img2emoji/blob/master/doc/Cahier_de_charge.md)
 - [Presentation slide](https://docs.google.com/presentation/d/12qwRl2qdpB4ghOJ1CvA9NAj-et_QXNDDF5C4GTyw5pk/edit?usp=sharing)
 - [Technique repport](https://docs.google.com/document/d/1uj00S5DDjxeMVkpO6LNUv8aBXqm-jEpq2iRJklv9fqo/edit?usp=sharing)
 
